@@ -1,17 +1,17 @@
 //========================================================================
-//	°®ºÃÕßµç×Ó¹¤×÷ÊÒ-ÌÔ±¦ https://devotee.taobao.com/
-//	STM32ËÄÖá°®ºÃÕßQQÈº: 810149456
-//	×÷Õß£ºĞ¡Áõ
-//	µç»°:13728698082
-//	ÓÊÏä:1042763631@qq.com
-//	ÈÕÆÚ£º2018.05.17
-//	°æ±¾£ºV1.0
+//	çˆ±å¥½è€…ç”µå­å·¥ä½œå®¤-æ·˜å® https://devotee.taobao.com/
+//	STM32å››è½´çˆ±å¥½è€…QQç¾¤: 810149456
+//	ä½œè€…ï¼šå°åˆ˜
+//	ç”µè¯:13728698082
+//	é‚®ç®±:1042763631@qq.com
+//	æ—¥æœŸï¼š2018.05.17
+//	ç‰ˆæœ¬ï¼šV1.0
 //========================================================================
-//Ì×¼ş¹ºÂòµØÖ·£ºhttps://devotee.taobao.com/
-//                 °®ºÃÕßµç×Ó¹¤×÷ÊÒ
-//ÌØ´ËÉùÃ÷£º
+//å¥—ä»¶è´­ä¹°åœ°å€ï¼šhttps://devotee.taobao.com/
+//                 çˆ±å¥½è€…ç”µå­å·¥ä½œå®¤
+//ç‰¹æ­¤å£°æ˜ï¼š
 //
-//         ´Ë³ÌĞòÖ»ÄÜ ÓÃ×÷Ñ§Ï°£¬ÈçÓÃÉÌÒµÓÃÍ¾¡£±Ø×·¾¿ÔğÈÎ£¡
+//         æ­¤ç¨‹åºåªèƒ½ ç”¨ä½œå­¦ä¹ ï¼Œå¦‚ç”¨å•†ä¸šç”¨é€”ã€‚å¿…è¿½ç©¶è´£ä»»ï¼
 //          
 //
 //
@@ -24,85 +24,87 @@
 #include "ANO_Data_Transfer.h"
 #include "ADC.h"
 
-volatile uint32_t SysTick_count; //ÏµÍ³Ê±¼ä¼ÆÊı
-volatile uint8_t spl_flag; //ÏµÍ³Ê±¼ä¼ÆÊı
-_st_Mpu MPU6050;   //MPU6050Ô­Ê¼Êı¾İ
+volatile uint32_t SysTick_count; //ç³»ç»Ÿæ—¶é—´è®¡æ•°
+volatile uint8_t spl_flag; //ç³»ç»Ÿæ—¶é—´è®¡æ•°
+_st_Mpu MPU6050;   //MPU6050åŸå§‹æ•°æ®
 _st_Mag AK8975;   
-_st_AngE Angle;    //µ±Ç°½Ç¶È×ËÌ¬Öµ
-_st_Remote Remote; //Ò£¿ØÍ¨µÀÖµ
+_st_AngE Angle;    //å½“å‰è§’åº¦å§¿æ€å€¼
+_st_Remote Remote; //é¥æ§é€šé“å€¼
 
 
 volatile uint32_t ST_CpuID;
  
  
-_st_ALL_flag ALL_flag; //ÏµÍ³±êÖ¾Î»£¬°üº¬½âËø±êÖ¾Î»µÈ
+_st_ALL_flag ALL_flag; //ç³»ç»Ÿæ ‡å¿—ä½ï¼ŒåŒ…å«è§£é”æ ‡å¿—ä½ç­‰
 
 
 
  _st_FlightData FlightData;
- //·É¿ØÃüÁî
+ //é£æ§å‘½ä»¤
 st_Command Command;
 
-PidObject pidRateX; //ÄÚ»·PIDÊı¾İ
+PidObject pidRateX; //å†…ç¯PIDæ•°æ®
 PidObject pidRateY;
 PidObject pidRateZ;
 
-PidObject pidPitch; //Íâ»·PIDÊı¾İ
+PidObject pidPitch; //å¤–ç¯PIDæ•°æ®
 PidObject pidRoll;
 PidObject pidYaw;
 
 PidObject pidHeightRate;
 PidObject pidHeightHigh;
 
-PidObject Flow_PosPid_x;    //Íâ»·¹âÁ÷
+PidObject Flow_PosPid_x;    //å¤–ç¯å…‰æµ
 PidObject Flow_PosPid_y;
 
-PidObject Flow_SpeedPid_x;  //ÄÚ»·¹âÁ÷
+PidObject Flow_SpeedPid_x;  //å†…ç¯å…‰æµ
 PidObject Flow_SpeedPid_y;
 
 _st_IMU IMU;
 
-void pid_param_Init(void); //PID¿ØÖÆ²ÎÊı³õÊ¼»¯£¬¸ÄĞ´PID²¢²»»á±£´æÊı¾İ£¬Çëµ÷ÊÔÍê³ÉºóÖ±½ÓÔÚ³ÌĞòÀï¸ü¸Ä ÔÙÉÕÂ¼µ½·É¿Ø
+void pid_param_Init(void); //PIDæ§åˆ¶å‚æ•°åˆå§‹åŒ–ï¼Œæ”¹å†™PIDå¹¶ä¸ä¼šä¿å­˜æ•°æ®ï¼Œè¯·è°ƒè¯•å®Œæˆåç›´æ¥åœ¨ç¨‹åºé‡Œæ›´æ”¹ å†çƒ§å½•åˆ°é£æ§
 
 
-//»ñÈ¡CPUµÄID
+//è·å–CPUçš„ID
 void GetLockCode(void)
 {
-	ST_CpuID = *(vu32*)(0x1ffff7e8);//µÍ×Ö½ÚĞ¾Æ¬IDÓÃÀ´×öÍ¨Ñ¶¶ÔÆµÍ¨µÀ
+	ST_CpuID = *(vu32*)(0x1ffff7e8);//ä½å­—èŠ‚èŠ¯ç‰‡IDç”¨æ¥åšé€šè®¯å¯¹é¢‘é€šé“
 }
 
-///////////////È«²¿³õÊ¼»¯//////////////////////////////////
+///////////////å…¨éƒ¨åˆå§‹åŒ–//////////////////////////////////
 void ALL_Init(void)
 {
 	float STBy;
 
-	IIC_Init();             //I2C³õÊ¼»¯
+	IIC_Init();             //I2Cåˆå§‹åŒ–
 		
-	pid_param_Init();       //PID²ÎÊı³õÊ¼»¯
+	pid_param_Init();       //PIDå‚æ•°åˆå§‹åŒ–
 	  
-	LEDInit();              //LEDÉÁµÆ³õÊ¼»¯
+	LEDInit();              //LEDé—ªç¯åˆå§‹åŒ–
 
-	MpuInit();              //MPU6050³õÊ¼»¯
+	MpuInit();              //MPU6050åˆå§‹åŒ–
 	
-		//ADC³õÊ¼»¯
+		//ADCåˆå§‹åŒ–
 	ADC1_Init();
 	
-	ANO_Uart1_Init(19200);   //½Ó¹âÁ÷Ä£¿é
+	ANO_Uart1_Init(19200);   //æ¥å…‰æµæ¨¡å—
 //	printf("ANO_Uart1_Init  \r\n")	
 	if (FLY_TYPE == 2) 
-	{UART2_Init(115200); }      //
+	{
+		UART2_Init(115200); 
+	}      //
 	
-	USART3_Config(500000);        //ÉÏÎ»»ú´®¿Ú³õÊ¼»¯
+	USART3_Config(500000);        //ä¸Šä½æœºä¸²å£åˆå§‹åŒ–
 //	printf("USART3_Config  \r\n");
 
-	NRF24L01_init();				//2.4GÒ£¿ØÍ¨ĞÅ³õÊ¼»¯
+	NRF24L01_init();				//2.4Gé¥æ§é€šä¿¡åˆå§‹åŒ–
 	
-	if(spl0601_init() >=1)	 //ÆøÑ¹¼Æ³õÊ¼»¯
+	if(spl0601_init() >=1)	 //æ°”å‹è®¡åˆå§‹åŒ–
 	{	  	
 		  while(1)
 			{ 
 				STBy++;
-				GPIOB->BSRR = GPIO_Pin_9;  //ÁÁÒ»¸öLED
+				GPIOB->BSRR = GPIO_Pin_9;  //äº®ä¸€ä¸ªLED
 				if(STBy>=100000)
 				{
 						spl_flag=0; 
@@ -117,8 +119,8 @@ void ALL_Init(void)
 		  SPL_Err = 0;
 	}
 	
-	TIM2_PWM_Config();			//2Â·PWM³õÊ¼»¯		
-	TIM3_PWM_Config();			//2Â·PWM³õÊ¼»¯		
+	TIM2_PWM_Config();			//2è·¯PWMåˆå§‹åŒ–		
+	TIM3_PWM_Config();			//2è·¯PWMåˆå§‹åŒ–		
 }
 
  
@@ -126,7 +128,7 @@ void ALL_Init(void)
 void pid_param_Init(void)
 {
 	
-//////////////////ÄÚ»·ËÙ¶ÈPID///////////////////////	
+//////////////////å†…ç¯é€Ÿåº¦PID///////////////////////	
 	
 	pidRateX.kp = 2.0f;
 	pidRateY.kp = 2.0f;
@@ -140,7 +142,7 @@ void pid_param_Init(void)
 	pidRateY.kd = 0.08f;
 	pidRateZ.kd = 0.5f;	
 	
-/////////////Íâ»·½Ç¶ÈPID///////////////////////////
+/////////////å¤–ç¯è§’åº¦PID///////////////////////////
 	
 	pidPitch.kp = 7.0f;
 	pidRoll.kp = 7.0f;
@@ -162,11 +164,11 @@ void pid_param_Init(void)
 //	pidHeightHigh.kp = 0.3f;//0.32f
 
 
-		//ÄÚ»·PID²ÎÊı ËÙ¶È
+		//å†…ç¯PIDå‚æ•° é€Ÿåº¦
 	pidHeightRate.kp = 1.2f; //1.2f
 	pidHeightRate.ki = 0.04f;
 	pidHeightRate.kd = 0.085f;
-		//Íâ»·PID²ÎÊı
+		//å¤–ç¯PIDå‚æ•°
 	pidHeightHigh.kp = 1.2f;//1.2f
 	pidHeightHigh.ki = 0.00f;
 	pidHeightHigh.kd = 0.085f;//0.085f
@@ -174,37 +176,37 @@ void pid_param_Init(void)
 	
 /////////////////////////////////////////////////////////////////////
 
-	//XÄÚ»·¹âÁ÷PID²ÎÊı  ËÙ¶È
+	//Xå†…ç¯å…‰æµPIDå‚æ•°  é€Ÿåº¦
 	
-	Flow_SpeedPid_x.kp = 0.610f;//±ÈÀı  0.600f
-	Flow_SpeedPid_x.ki = 0.000f;//»ı·Ö
-	Flow_SpeedPid_x.kd = 0.400f;//Î¢·Ö
+	Flow_SpeedPid_x.kp = 0.610f;//æ¯”ä¾‹  0.600f
+	Flow_SpeedPid_x.ki = 0.000f;//ç§¯åˆ†
+	Flow_SpeedPid_x.kd = 0.400f;//å¾®åˆ†
 	
-	//XÍâ»·¹âÁ÷PID²ÎÊı  Î»ÖÃ
+	//Xå¤–ç¯å…‰æµPIDå‚æ•°  ä½ç½®
 	
-	Flow_PosPid_x.kp = 2.200f;//±ÈÀı  2.000f
-	Flow_PosPid_x.ki = 0.000f;//»ı·Ö
-	Flow_PosPid_x.kd = 0.006f;//Î¢·Ö
+	Flow_PosPid_x.kp = 2.200f;//æ¯”ä¾‹  2.000f
+	Flow_PosPid_x.ki = 0.000f;//ç§¯åˆ†
+	Flow_PosPid_x.kd = 0.006f;//å¾®åˆ†
 	
 	//////////////////////////////////////////////////////////
 	
-		//YÄÚ»·¹âÁ÷PID²ÎÊı ËÙ¶È
+		//Yå†…ç¯å…‰æµPIDå‚æ•° é€Ÿåº¦
 	
-	Flow_SpeedPid_y.kp = 0.610f;//±ÈÀı
-	Flow_SpeedPid_y.ki = 0.000f;//»ı·Ö
-	Flow_SpeedPid_y.kd = 0.400f;//Î¢·Ö
+	Flow_SpeedPid_y.kp = 0.610f;//æ¯”ä¾‹
+	Flow_SpeedPid_y.ki = 0.000f;//ç§¯åˆ†
+	Flow_SpeedPid_y.kd = 0.400f;//å¾®åˆ†
 	
-	//YÍâ»·¹âÁ÷PID²ÎÊı Î»ÖÃ 
+	//Yå¤–ç¯å…‰æµPIDå‚æ•° ä½ç½® 
 	
-	Flow_PosPid_y.kp = 2.200f;//±ÈÀı
-	Flow_PosPid_y.ki = 0.00f;//»ı·Ö
-	Flow_PosPid_y.kd = 0.006f;//Î¢·Ö
+	Flow_PosPid_y.kp = 2.200f;//æ¯”ä¾‹
+	Flow_PosPid_y.ki = 0.00f;//ç§¯åˆ†
+	Flow_PosPid_y.kd = 0.006f;//å¾®åˆ†
 
 ///////////////////////////////////////////////////////////////////
 	
 
 
-	Command.FlightMode = NORMOL;  //³õÊ¼»¯Îª×ËÌ¬·ÉĞĞÄ£Ê½
+	Command.FlightMode = NORMOL;  //åˆå§‹åŒ–ä¸ºå§¿æ€é£è¡Œæ¨¡å¼
 }
 
 
